@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#1a1a1a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Lịch trình Vĩnh Hy - Cam Ranh | 28/4 - 1/5/2026</title>
+<style>
+  :root {
+    --noir: #1a1a1a;
+    --ivory: #f5f1e8;
+    --ghost: #e8e3d6;
+    --accent: #c9a87c;
+    --accent-dark: #8b6f47;
+    --warn: #c0392b;
+    --ok: #2d6a4f;
+    --info: #1e5f74;
+    --safe-top: env(safe-area-inset-top, 0);
+    --safe-bottom: env(safe-area-inset-bottom, 0);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: rgba(201,168,124,0.2); }
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Manrope', 'Segoe UI', Roboto, sans-serif;
+    background: var(--ivory);
+    color: var(--noir);
+    line-height: 1.6;
+    padding: 0;
+    overflow-x: hidden;
+  }
+
+  /* MOBILE-FIRST BASE */
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 16px 14px calc(80px + var(--safe-bottom)) 14px;
+  }
+
+  header {
+    text-align: center;
+    padding: 20px 12px 24px;
+    border-bottom: 1px solid var(--ghost);
+    margin-bottom: 20px;
+  }
+  header .eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--accent-dark);
+    margin-bottom: 8px;
+  }
+  header h1 {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-weight: 500;
+    font-size: 28px;
+    line-height: 1.15;
+    margin-bottom: 8px;
+    letter-spacing: -0.01em;
+  }
+  header .meta {
+    font-size: 12px;
+    color: #555;
+    line-height: 1.5;
+  }
+
+  .tldr {
+    background: var(--noir);
+    color: var(--ivory);
+    padding: 18px 18px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+  }
+  .tldr h2 {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-weight: 400;
+    font-size: 18px;
+    margin-bottom: 10px;
+    color: var(--accent);
+  }
+  .tldr p { margin-bottom: 8px; font-size: 14px; line-height: 1.55; }
+  .tldr ul { padding-left: 18px; margin-top: 8px; }
+  .tldr li { margin-bottom: 6px; font-size: 13px; line-height: 1.5; }
+
+  /* STICKY TABS */
+  .tabs-wrap {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--ivory);
+    margin: 0 -14px 20px;
+    padding: 0 8px;
+    border-bottom: 1px solid var(--ghost);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
+  .tabs {
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tab {
+    flex: 0 0 auto;
+    min-width: 110px;
+    min-height: 48px;
+    padding: 12px 14px;
+    background: transparent;
+    border: none;
+    border-bottom: 3px solid transparent;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 13px;
+    color: #666;
+    white-space: nowrap;
+    transition: all 0.2s;
+    scroll-snap-align: start;
+    text-align: center;
+  }
+  .tab.active {
+    color: var(--noir);
+    border-bottom-color: var(--accent);
+    font-weight: 700;
+  }
+  .tab:active { background: var(--ghost); }
+
+  .day { display: none; }
+  .day.active { display: block; animation: fadeIn 0.25s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+  .day-header { margin-bottom: 18px; }
+  .day-header h2 {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-weight: 500;
+    font-size: 24px;
+    margin-bottom: 4px;
+  }
+  .day-header .subtitle {
+    color: #666;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  .timeline {
+    position: relative;
+    padding-left: 22px;
+    border-left: 2px solid var(--ghost);
+  }
+  .event {
+    position: relative;
+    padding-bottom: 22px;
+  }
+  .event::before {
+    content: '';
+    position: absolute;
+    left: -29px;
+    top: 6px;
+    width: 12px;
+    height: 12px;
+    background: var(--ivory);
+    border: 2px solid var(--accent);
+    border-radius: 50%;
+  }
+  .event.highlight::before { background: var(--accent); }
+  .event.warn::before { border-color: var(--warn); background: var(--warn); }
+
+  .event-time {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--accent-dark);
+    letter-spacing: 0.05em;
+    margin-bottom: 4px;
+  }
+  .event h3 {
+    font-size: 16px;
+    line-height: 1.35;
+    margin-bottom: 6px;
+    font-weight: 600;
+  }
+  .event p { font-size: 14px; line-height: 1.55; margin-bottom: 6px; color: #333; }
+  .event .tip {
+    font-size: 13px;
+    line-height: 1.5;
+    background: var(--ghost);
+    padding: 10px 12px;
+    border-radius: 4px;
+    margin-top: 8px;
+    color: #444;
+  }
+  .event .tip::before { content: '💡 '; }
+  .event .warn-box {
+    font-size: 13px;
+    line-height: 1.5;
+    background: #fdecea;
+    color: var(--warn);
+    padding: 10px 12px;
+    border-radius: 4px;
+    margin-top: 8px;
+    border-left: 3px solid var(--warn);
+  }
+  .event .warn-box::before { content: '⚠ '; font-weight: 700; }
+
+  /* PREV/NEXT NAV */
+  .day-nav {
+    display: flex;
+    gap: 8px;
+    margin-top: 28px;
+    padding-top: 20px;
+    border-top: 1px dashed var(--ghost);
+  }
+  .day-nav button {
+    flex: 1;
+    min-height: 48px;
+    padding: 12px 14px;
+    background: white;
+    color: var(--noir);
+    border: 1px solid var(--ghost);
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .day-nav button:active { background: var(--accent); color: white; }
+  .day-nav button:disabled { opacity: 0.35; cursor: not-allowed; }
+  .day-nav button.next { background: var(--noir); color: var(--ivory); border-color: var(--noir); }
+  .day-nav button.next:active { background: var(--accent-dark); }
+
+  .section {
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid var(--ghost);
+  }
+  .section h2 {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-weight: 500;
+    font-size: 22px;
+    margin-bottom: 16px;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .card {
+    background: white;
+    padding: 16px;
+    border-radius: 6px;
+    border: 1px solid var(--ghost);
+  }
+  .card h3 {
+    font-size: 15px;
+    line-height: 1.35;
+    margin-bottom: 8px;
+    color: var(--accent-dark);
+  }
+  .card p { font-size: 13px; line-height: 1.55; color: #444; margin-bottom: 6px; }
+  .card .meta-line {
+    font-size: 12px;
+    color: #888;
+    margin-top: 10px;
+    padding-top: 8px;
+    border-top: 1px solid var(--ghost);
+  }
+
+  /* TABLE — horizontal scroll on mobile */
+  .table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin: 12px -14px 0;
+    padding: 0 14px;
+  }
+  .table-wrap::after {
+    content: '';
+    display: block;
+    width: 14px;
+    flex-shrink: 0;
+  }
+  table {
+    width: 100%;
+    min-width: 560px;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  th, td {
+    text-align: left;
+    padding: 10px 10px;
+    border-bottom: 1px solid var(--ghost);
+    vertical-align: top;
+  }
+  th {
+    background: var(--ghost);
+    font-weight: 700;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+  }
+  .scroll-hint {
+    font-size: 11px;
+    color: #888;
+    margin-top: 4px;
+    font-style: italic;
+  }
+
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    margin-right: 4px;
+    white-space: nowrap;
+  }
+  .badge-must { background: var(--accent); color: white; }
+  .badge-opt { background: var(--ghost); color: #555; }
+  .badge-warn { background: #fdecea; color: var(--warn); }
+  .badge-relax { background: #e8f4ea; color: var(--ok); }
+
+  .checklist {
+    list-style: none;
+    padding: 0;
+  }
+  .checklist li {
+    padding: 14px 8px;
+    border-bottom: 1px solid var(--ghost);
+    font-size: 14px;
+    line-height: 1.45;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.15s;
+    border-radius: 4px;
+  }
+  .checklist li:active { background: var(--ghost); }
+  .checklist li::before {
+    content: '☐';
+    color: var(--accent);
+    font-size: 22px;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  .checklist li.done::before { content: '☑'; color: var(--ok); }
+  .checklist li.done { color: #888; text-decoration: line-through; }
+
+  /* BACK TO TOP */
+  .to-top {
+    position: fixed;
+    bottom: calc(20px + var(--safe-bottom));
+    right: 16px;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--noir);
+    color: var(--ivory);
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    opacity: 0;
+    transform: translateY(8px);
+    pointer-events: none;
+    transition: all 0.2s;
+    z-index: 50;
+  }
+  .to-top.show { opacity: 1; transform: translateY(0); pointer-events: auto; }
+  .to-top:active { background: var(--accent-dark); }
+
+  footer {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid var(--ghost);
+    font-size: 11px;
+    color: #888;
+    text-align: center;
+    line-height: 1.6;
+  }
+
+  /* TABLET & DESKTOP */
+  @media (min-width: 600px) {
+    .container { padding: 24px 20px 80px; }
+    header { padding: 28px 20px 32px; margin-bottom: 28px; }
+    header h1 { font-size: 36px; }
+    header .meta { font-size: 14px; }
+    .tldr { padding: 24px 28px; margin-bottom: 32px; }
+    .tldr h2 { font-size: 20px; }
+    .tldr p { font-size: 15px; }
+    .tldr li { font-size: 14px; }
+    .tabs-wrap { margin: 0 -20px 28px; padding: 0 16px; }
+    .tab { min-width: 140px; padding: 14px 18px; font-size: 14px; }
+    .day-header h2 { font-size: 28px; }
+    .day-header .subtitle { font-size: 14px; }
+    .timeline { padding-left: 32px; }
+    .event::before { left: -39px; width: 14px; height: 14px; }
+    .event h3 { font-size: 17px; }
+    .section h2 { font-size: 26px; }
+    .section { margin-top: 48px; padding-top: 32px; }
+    .grid { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+    .card { padding: 20px; }
+    .table-wrap { margin: 16px 0 0; padding: 0; overflow-x: auto; }
+    table { min-width: 100%; font-size: 14px; }
+    th, td { padding: 12px; }
+  }
+
+  @media (min-width: 900px) {
+    header h1 { font-size: 44px; }
+    .container { padding: 32px 24px 80px; }
+  }
+
+  /* PRINT */
+  @media print {
+    .tabs-wrap, .day-nav, .to-top { display: none !important; }
+    .day { display: block !important; page-break-after: always; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<header>
+  <div class="eyebrow">Lịch trình gia đình • 4 ngày 3 đêm</div>
+  <h1>Vĩnh Hy &mdash; Cam Ranh</h1>
+  <div class="meta">28/04 — 01/05/2026 &nbsp;•&nbsp; 3 người (vợ chồng + bé 6 tuổi) &nbsp;•&nbsp; Đi cùng nhà Tùng (29/4)</div>
+</header>
+
+<div class="tldr">
+  <h2>TL;DR — Khung lịch chính</h2>
+  <p><strong>Tone:</strong> Trải nghiệm cho bé + nghỉ dưỡng. Né khung 11h–15h (nắng đỉnh 38–40°C). Mỗi ngày 1 spot chính + 1 bữa ăn ấn tượng, còn lại relax.</p>
+  <ul>
+    <li><strong>28/4 (Thứ 3):</strong> Bay → Vĩnh Hy → ăn trưa làng chài → check-in 14h → tắm hồ bơi/biển khu lưu trú → tối ăn quán Bà Hương.</li>
+    <li><strong>29/4 (Thứ 4):</strong> 8h sáng đi cano Hòn Rùa cùng nhà Tùng → trưa ăn hải sản làng chài → chiều Bãi Thùng (hoặc nghỉ trưa) → tối Madam Hoàng view vịnh.</li>
+    <li><strong>30/4 (Thứ 5):</strong> Sáng Đoài Cafe (chay) → ghé Công viên Đá chụp nhanh → di chuyển DT702 về Cam Ranh, dừng cung biển → check-in Selectum Noa → tắm Bãi Dài + waterpark.</li>
+    <li><strong>1/5 (Thứ 6):</strong> Resort sáng (kids club + bể bơi) → ăn trưa nhẹ → 13h checkout → 13h45 sân bay → 15h30 bay về.</li>
+  </ul>
+  <p style="margin-top:12px;"><strong>3 cảnh báo quan trọng:</strong> (1) Đoài Cafe <strong>nghỉ thứ Tư</strong> → đi sáng 30/4. (2) Công viên Đá phải <strong>trekking 3km</strong> — với bé 6 tuổi chỉ chụp khu gần đường, không leo mỏm. (3) Cano Hòn Rùa lễ 30/4 cao điểm — xác nhận lại với nhà Tùng tối nay.</p>
+</div>
+
+<!-- TABS (sticky) -->
+<div class="tabs-wrap">
+  <div class="tabs" role="tablist">
+    <button class="tab active" data-day="d1">28/4 · Bay & Vĩnh Hy</button>
+    <button class="tab" data-day="d2">29/4 · Hòn Rùa</button>
+    <button class="tab" data-day="d3">30/4 · DT702 & Cam Ranh</button>
+    <button class="tab" data-day="d4">1/5 · Resort & về</button>
+  </div>
+</div>
+
+<!-- DAY 1 -->
+<div class="day active" id="d1">
+  <div class="day-header">
+    <h2>Ngày 1 — Thứ Ba, 28/4</h2>
+    <div class="subtitle">Bay Hà Nội → Cam Ranh → Vĩnh Hy. Ngày di chuyển nhiều, ưu tiên relax buổi chiều cho bé hồi sức.</div>
+  </div>
+  <div class="timeline">
+    <div class="event highlight">
+      <div class="event-time">04:30 — 05:45</div>
+      <h3>Sân bay Nội Bài → Boarding</h3>
+      <p>Đến sớm 1h15 vì cao điểm 30/4. Mua đồ ăn nhẹ + sữa cho bé tại sảnh quốc nội (gate cuối thường ít quán).</p>
+      <div class="tip">Chuẩn bị 1 áo dài tay mỏng cho bé khi ngồi máy bay (lạnh điều hoà), kẹo gừng/ngậm cho ù tai khi cất/hạ cánh.</div>
+    </div>
+    <div class="event">
+      <div class="event-time">05:45 — 07:30</div>
+      <h3>Bay Nội Bài → Cam Ranh</h3>
+      <p>Bay ~1h45. Hạ cánh khoảng 7h25. Lấy hành lý + ra sảnh đón taxi.</p>
+    </div>
+    <div class="event">
+      <div class="event-time">07:30 — 09:00</div>
+      <h3>Taxi Cam Ranh → Vĩnh Hy (đã đặt)</h3>
+      <p>Khoảng 60–65km qua DT702 — cung đường ven biển đẹp nhất VN. Một bên núi đá Vườn Quốc gia Núi Chúa, một bên biển ngọc. Đi tầm 1h15–1h30.</p>
+      <div class="tip">Báo tài xế dừng 1 chỗ chụp ảnh nhanh ở đoạn Bình Tiên hoặc đèo Vĩnh Hy — view đẹp, sáng sớm chưa nắng gắt. Bé có thể ngủ tiếp trên xe.</div>
+    </div>
+    <div class="event highlight">
+      <div class="event-time">09:00 — 11:30</div>
+      <h3>Đến Vĩnh Hy — Gửi đồ + đi dạo nhẹ</h3>
+      <p>Chưa nhận phòng. Gửi vali ở quầy lễ tân, ra cảng Vĩnh Hy đi bộ ngắm thuyền thúng + thuyền cá. Bé thích.</p>
+      <div class="tip">Đây là cơ hội cho bé thấy đời sống làng chài thực — chỉ thuyền, hỏi tên cá. Chụp vài bức cho gia đình. Tránh đi quá xa, 9h30 trở đi nắng đã gắt.</div>
+    </div>
+    <div class="event">
+      <div class="event-time">11:30 — 13:30</div>
+      <h3><span class="badge badge-must">BỮA</span>Ăn trưa quán làng chài</h3>
+      <p>Đặt bàn quán <strong>Bà Hương</strong> (4.3⭐, view vịnh, hải sản tươi sống). Gọi vừa đủ — bé 6 tuổi ăn cơm trắng + cá hấp/chiên là tốt, người lớn thử tôm hùm/ghẹ/mực hấp + canh chua cá biển.</p>
+      <div class="tip">Hỏi đặt 1 phần hải sản cho cả nhà chứ đừng gọi mỗi món vài lạng — đắt hơn. Hải sản Vĩnh Hy giá 1.000đ – 600.000đ tuỳ món, định giá theo kg trước khi nấu.</div>
+    </div>
+    <div class="event">
+      <div class="event-time">13:30 — 14:00</div>
+      <h3>Quay về khách sạn — Chờ check-in</h3>
+      <p>Có thể ngồi sảnh, bé đọc sách/iPad. 14h nhận phòng đúng giờ.</p>
+    </div>
+    <div class="event">
+      <div class="event-time">14:00 — 16:30</div>
+      <h3><span class="badge badge-relax">RELAX</span>Nhận phòng — Bé ngủ trưa</h3>
+      <p>Khoảng nắng đỉnh điểm. Bé ngủ trưa 1.5–2h hồi sức. Người lớn tranh thủ tắm rửa, soạn đồ ngày mai.</p>
+      <div class="warn-box">Đừng rủ bé đi bãi biển khoảng 13–15h — UV rất cao, nguy cơ say nắng & cháy nắng cho bé.</div>
+    </div>
+    <div class="event highlight">
+      <div class="event-time">16:30 — 18:30</div>
+      <h3>Tắm biển/hồ bơi tại khu lưu trú</h3>
+      <p>Mặt trời dịu, bé chơi 2 tiếng vừa đủ. Mang áo phao + kính bơi cho bé.</p>
+      <div class="tip">Sau khi tắm biển, tắm lại nước ngọt ngay tại hồ + bôi kem dưỡng cho bé đỡ rát da.</div>
+    </div>
+    <div class="event">
+      <div class="event-time">18:30 — 20:00</div>
+      <h3>Tối thư giãn — Bữa nhẹ</h3>
+      <p>Ăn nhẹ tại resort/quán gần khách sạn. Đi ngủ sớm vì 7h30 mai dậy đi cano.</p>
+      <div class="tip">Chuẩn bị sẵn đồ tắm, áo phao, mũ, kem chống nắng SPF50+ cho bé tối nay — sáng mai 8h xuất phát.</div>
+    </div>
+  </div>
+  <div class="day-nav">
+    <button disabled>← Ngày trước</button>
+    <button class="next" data-go="d2">Ngày 29/4 →</button>
+  </div>
+</div>
+
+<!-- DAY 2 -->
+<div class="day" id="d2">
+  <div class="day-header">
+    <h2>Ngày 2 — Thứ Tư, 29/4</h2>
+    <div class="subtitle">Highlight: Cano Hòn Rùa cùng nhà Tùng. Ngày này tone trải nghiệm cao nhất — bé sẽ enjoy.</div>
+  </div>
+  <div class="timeline">
+    <div class="event">
+      <div class="event-time">06:30 — 07:30</div>
+      <h3>Ăn sáng tại khách sạn</h3>
+      <p>Ăn no nhưng không quá no — bé 6 tuổi dễ say sóng. Tránh đồ chiên/dầu mỡ. Mì/phở/cháo + 1 ly sữa là hợp.</p>
+    </div>
+    <div class="event highlight warn">
+      <div class="event-time">08:00 — 11:30</div>
+      <h3><span class="badge badge-must">HIGHLIGHT</span>Cano đi Hòn Rùa cùng nhà Tùng</h3>
+      <p>Cano cao tốc 7–15 phút từ cảng Vĩnh Hy. Hoạt động chính: tắm biển nước trong + lặn ngắm san hô (snorkel mặt nước, không thợ lặn). Hòn Rùa hoang sơ, không có dịch vụ ăn uống — phải mang nước + snack.</p>
+      <div class="warn-box"><strong>An toàn cho bé:</strong> Bắt buộc mặc áo phao 100% thời gian trên cano + dưới nước. Bé 6 tuổi snorkel được nếu đeo mặt nạ trẻ em & có người lớn kèm sát. Nếu sóng to, ưu tiên tắm gần bờ thay vì ra san hô.</div>
+      <div class="tip">Xác nhận với nhà Tùng tối nay: (1) số ghế cano có chỗ cho bé an toàn không, (2) đã có áo phao trẻ em chưa, (3) giờ về cano cuối — đừng để mắc kẹt vì nước rút/sóng to.</div>
+    </div>
+    <div class="event">
+      <div class="event-time">11:30 — 13:30</div>
+      <h3><span class="badge badge-must">BỮA</span>Trưa hải sản làng chài</h3>
+      <p>Vừa lên bờ là đói, bé mệt. Quán <strong>Hải Sản Làng Chài</strong> ngay cảng Vĩnh Hy là tiện nhất — không phải đi xa. Ưu tiên cá hấp + tôm luộc + canh chua + cơm cho bé.</p>
+      <div class="tip">Nếu nhà Tùng đã ăn quán Bà Hương hôm 28/4 rồi thì hôm nay đổi quán khác để đa dạng. Hỏi quán có món <strong>gỏi cá mai</strong> không — đặc sản Vĩnh Hy chỉ có ở vùng biển sạch.</div>
+    </div>
+    <div class="event">
+      <div class="event-time">13:30 — 16:00</div>
+      <h3><span class="badge badge-relax">RELAX</span>Nghỉ trưa tại phòng</h3>
+      <p>Sau 1 buổi sáng vận động cộng nắng + nước mặn, bé sẽ ngủ ngon ~2h. Người lớn cũng nên ngủ — chiều còn 1 hoạt động.</p>
+    </div>
+    <div class="event">
+      <div class="event-time">16:00 — 18:00</div>
+      <h3><span class="badge badge-opt">OPTIONAL</span>Bãi Thùng (nếu bé còn sức)</h3>
+      <p>Bãi Thùng nằm trên cung DT702, ~10–15 phút xe từ Vĩnh Hy. Sóng nhỏ, cát mịn, hoang sơ — hợp với bé 6 tuổi tắm an toàn. Hoặc tắm bể bơi resort cho dễ.</p>
+      <div class="tip"><strong>Plan B (nếu bé mệt):</strong> Ở khách sạn, để bé chơi cát/nước tại bể bơi. Người lớn thưởng café — đỡ áp lực hơn lái xe.</div>
+    </div>
+    <div class="event highlight">
+      <div class="event-time">18:30 — 20:30</div>
+      <h3><span class="badge badge-must">BỮA</span>Tối Madam Hoàng — view vịnh</h3>
+      <p>Quán có view vịnh Vĩnh Hy đẹp nhất khi hoàng hôn (~18h tháng 4). Đặt bàn ngoài trời sát mép vịnh, gọi 1 mâm hải sản + nước. Bé có thể ngắm thuyền cá vào cảng.</p>
+      <div class="tip">Đặt bàn trước 1 giờ — cao điểm 30/4 quán full. Mặc áo dài tay nhẹ vì gió biển buổi tối hơi se.</div>
+    </div>
+  </div>
+  <div class="day-nav">
+    <button data-go="d1">← Ngày 28/4</button>
+    <button class="next" data-go="d3">Ngày 30/4 →</button>
+  </div>
+</div>
+
+<!-- DAY 3 -->
+<div class="day" id="d3">
+  <div class="day-header">
+    <h2>Ngày 3 — Thứ Năm, 30/4</h2>
+    <div class="subtitle">Chia 2 nửa: Sáng tận hưởng Vĩnh Hy lần cuối, chiều di chuyển về Selectum Cam Ranh.</div>
+  </div>
+  <div class="timeline">
+    <div class="event">
+      <div class="event-time">06:00 — 07:00</div>
+      <h3><span class="badge badge-opt">OPTIONAL</span>Chợ cá làng chài Vĩnh Hy lúc bình minh</h3>
+      <p>Tàu cá đêm cập bến 5–6h sáng. Bé 6 tuổi nếu ngủ đủ có thể dậy sớm xem 30 phút — trải nghiệm rất khác lạ. Mua hải sản về cho khách sạn chế biến (nếu cho phép) hoặc chỉ ngắm.</p>
+      <div class="warn-box">Cân nhắc kỹ: Bé thiếu ngủ → cả ngày mệt. Nếu hôm trước bé đi cano về mệt, BỎ QUA mục này.</div>
+    </div>
+    <div class="event">
+      <div class="event-time">07:30 — 09:30</div>
+      <h3><span class="badge badge-must">HIGHLIGHT</span>Đoài Cafe — Sáng chill núi rừng</h3>
+      <p>Quán cafe + nhà hàng chay nằm sườn núi ở làng Cầu Gãy, view vịnh Vĩnh Hy + dãy Núi Chúa. Mở 7:30. Gọi cafe + bánh ngọt + đồ chay nhẹ — coi như brunch. Bé chạy nhảy trong sân vườn quán an toàn.</p>
+      <div class="warn-box"><strong>Quan trọng:</strong> Quán nghỉ thứ Tư hàng tuần. Hôm nay (Thứ 5) mở bình thường — vẫn xác nhận lại số quán trước khi đi vì lễ có thể đổi lịch.</div>
+      <div class="tip">Địa chỉ: Suối Lồ Ồ, Làng Cầu Gãy Vĩnh Hy. Kiểm tra Google Maps đường đi từ khách sạn — có đoạn đường núi nhỏ.</div>
+    </div>
+    <div class="event">
+      <div class="event-time">09:30 — 11:00</div>
+      <h3><span class="badge badge-opt">OPTIONAL</span>Công viên Đá Ninh Thuận</h3>
+      <p>Thuộc thôn Thái An, xã Vĩnh Hải — tiện đường về Cam Ranh. Khối đá tự nhiên hình voi/rắn/cá rất đặc trưng. Đẹp để chụp ảnh.</p>
+      <div class="warn-box"><strong>Cảnh báo cho bé 6 tuổi:</strong> Khu chính phải trekking xuyên rừng ~3km mới tới — quá sức bé, có mỏm đá nhô cao nguy hiểm. Chỉ nên dừng khu gần đường (5–10 phút chụp ảnh) rồi đi tiếp. KHÔNG leo mỏm cao.</div>
+    </div>
+    <div class="event">
+      <div class="event-time">11:00 — 12:00</div>
+      <h3>Quay về khách sạn — Checkout & ăn trưa</h3>
+      <p>Trả phòng. Ăn trưa nhanh tại quán quen ở làng chài (chưa thử quán nào trong 2 ngày qua thì thử nốt). Đóng gói đồ chống nắng cho hành trình DT702.</p>
+    </div>
+    <div class="event highlight">
+      <div class="event-time">12:30 — 15:00</div>
+      <h3><span class="badge badge-must">HIGHLIGHT</span>DT702 Vĩnh Hy → Cam Ranh</h3>
+      <p>~60km, đi 1h30–2h kèm điểm dừng. Cung đường biển nổi tiếng đẹp nhất VN. Một bên núi đá Núi Chúa, một bên biển. Dừng 2–3 chỗ ngắm cảnh + chụp ảnh: đoạn Bình Tiên, đoạn nhìn xuống vịnh, mỏm đá biển sâu.</p>
+      <div class="tip">Báo bác tài đi chậm + dừng 5–10 phút mỗi spot đẹp. Nếu thuê xe riêng, tiền dừng đã tính sẵn. Mang theo nước & khăn lạnh — trên đường ít quán.</div>
+    </div>
+    <div class="event">
+      <div class="event-time">15:00 — 16:00</div>
+      <h3>Check-in Selectum Noa Resort Cam Ranh</h3>
+      <p>Địa chỉ: Lô X5B & TT3A, Khu 2, Khu DL Bắc Bán đảo Cam Ranh, Cam Hải Đông. Nhận phòng, đăng ký kids club cho bé.</p>
+      <div class="tip">Hỏi lễ tân: (1) lịch hoạt động kids club hôm nay & mai, (2) lịch show S'Arena buổi tối, (3) waterpark mở giờ nào & có miễn phí trong gói không.</div>
+    </div>
+    <div class="event highlight">
+      <div class="event-time">16:00 — 18:30</div>
+      <h3><span class="badge badge-relax">PLAY</span>Waterpark + Bãi Dài</h3>
+      <p>Resort có waterpark lớn nhất Cam Ranh + bãi biển 400m cát trắng. Bé sẽ thích waterpark hơn bãi biển sóng. Nắng dịu sau 16h, an toàn cho bé chơi nước.</p>
+    </div>
+    <div class="event">
+      <div class="event-time">19:00 — 21:00</div>
+      <h3>Tối tại resort — Bữa & show</h3>
+      <p>Nếu gói AI (All Inclusive) thì ăn buffet trong resort. Sau ăn xem show tại sân khấu S'Arena (thường 20h–21h). Bé có thể ngủ trễ chút — mai sáng không cần dậy sớm.</p>
+    </div>
+  </div>
+  <div class="day-nav">
+    <button data-go="d2">← Ngày 29/4</button>
+    <button class="next" data-go="d4">Ngày 1/5 →</button>
+  </div>
+</div>
+
+<!-- DAY 4 -->
+<div class="day" id="d4">
+  <div class="day-header">
+    <h2>Ngày 4 — Thứ Sáu, 1/5</h2>
+    <div class="subtitle">Tone nghỉ dưỡng. Giữ khung giờ chặt vì bay 15h30 — phải ra sân bay 13h45.</div>
+  </div>
+  <div class="timeline">
+    <div class="event">
+      <div class="event-time">07:30 — 09:00</div>
+      <h3>Ăn sáng buffet — Sảnh chính</h3>
+      <p>Selectum Noa có 7 nhà hàng/bar, buffet sáng đa dạng. Bé thử món Việt + Tây.</p>
+    </div>
+    <div class="event highlight">
+      <div class="event-time">09:00 — 11:30</div>
+      <h3><span class="badge badge-relax">PLAY</span>Kids club + bể bơi</h3>
+      <p>Đăng ký bé vào kids club (resort có kids club cho bé 1–12 tuổi). Vợ chồng có 2 tiếng riêng — đi bộ bãi biển, spa nhanh, hoặc cafe.</p>
+      <div class="tip">Hỏi kids club có chương trình gì sáng nay (vẽ, kể chuyện, hồ bơi trẻ em). Bé enjoy tốt sẽ hết screen time + người lớn được nghỉ thật sự.</div>
+    </div>
+    <div class="event">
+      <div class="event-time">11:30 — 12:30</div>
+      <h3>Tắm rửa + đóng gói + checkout sớm</h3>
+      <p>Tắm rửa cho bé hết clo bể bơi, thay đồ bay. Đóng gói. Down hành lý xuống lễ tân lúc 12:00. Checkout 12:30.</p>
+    </div>
+    <div class="event">
+      <div class="event-time">12:30 — 13:30</div>
+      <h3><span class="badge badge-must">BỮA</span>Ăn trưa nhẹ tại resort</h3>
+      <p>Ăn nhẹ — phở, mì, sandwich. Tránh đồ nhiều dầu mỡ trước khi bay. Bé uống đủ nước.</p>
+    </div>
+    <div class="event">
+      <div class="event-time">13:30 — 13:50</div>
+      <h3>Taxi/shuttle ra sân bay</h3>
+      <p>Resort cách sân bay Cam Ranh chỉ 9km — đi 15–20 phút. Đặt taxi/shuttle resort 13:30.</p>
+    </div>
+    <div class="event highlight">
+      <div class="event-time">14:00 — 15:30</div>
+      <h3>Sân bay Cam Ranh — Boarding</h3>
+      <p>Có mặt sân bay 14:00 (1h30 trước giờ bay) — cao điểm 1/5 sân bay đông, đủ thời gian thủ tục + đi vệ sinh + cho bé ăn nhẹ trước khi bay.</p>
+      <div class="tip">Mua đặc sản Ninh Thuận tại sân bay nếu chưa kịp: nho, táo Ninh Thuận, nước mắm. Cân hành lý cẩn thận — hải sản tươi không xách lên máy bay được.</div>
+    </div>
+    <div class="event">
+      <div class="event-time">15:30 — 17:30</div>
+      <h3>Bay Cam Ranh → Hà Nội</h3>
+      <p>Hạ cánh Nội Bài tầm 17:30. Kết thúc chuyến đi.</p>
+    </div>
+  </div>
+  <div class="day-nav">
+    <button data-go="d3">← Ngày 30/4</button>
+    <button class="next" disabled>Hết lịch ✓</button>
+  </div>
+</div>
+
+<!-- SECTION: QUÁN ĂN -->
+<div class="section">
+  <h2>Quán ăn Vĩnh Hy — Tham khảo</h2>
+  <div class="grid">
+    <div class="card">
+      <h3>Quán Bà Hương</h3>
+      <p>Hải sản tươi sống + cơm Việt + ăn sáng. View vịnh đẹp, không gian rộng. 4.3⭐ trên 1.1k reviews.</p>
+      <p><strong>Gợi ý:</strong> Cá hấp/chiên + tôm luộc + canh chua cá biển + cơm trắng. Hỏi món gỏi cá mai đặc sản.</p>
+      <div class="meta-line">Vịnh Vĩnh Hy, Vĩnh Hải • Bữa trưa 28/4 hoặc tối</div>
+    </div>
+    <div class="card">
+      <h3>Hải Sản Làng Chài</h3>
+      <p>Quán ngay cảng Vĩnh Hy. Tiện cho bữa sau khi đi cano về. Cùng hệ thống La Mer với Bà Hương.</p>
+      <p><strong>Gợi ý:</strong> Mâm hải sản gọi sẵn + nước canh cho bé.</p>
+      <div class="meta-line">Cảng Vĩnh Hy • Bữa trưa 29/4</div>
+    </div>
+    <div class="card">
+      <h3>Madame Hoàng</h3>
+      <p>View vịnh Vĩnh Hy đẹp lúc hoàng hôn. Mâm hải sản + cá nướng. Không gian sang hơn 2 quán trên.</p>
+      <p><strong>Gợi ý:</strong> Đặt bàn trước. Hoàng hôn 18h. Mặc áo dài tay nhẹ.</p>
+      <div class="meta-line">Vĩnh Hy • Bữa tối 29/4</div>
+    </div>
+    <div class="card">
+      <h3>Đoài Cafe (chay)</h3>
+      <p>Cafe + nhà hàng chay sườn núi, view biển từ trên cao. Giờ mở 7:30–17:30. Nghỉ thứ Tư.</p>
+      <p><strong>Gợi ý:</strong> Brunch sáng 30/4. Đồ chay nhẹ, café signature, bé chạy chơi sân vườn.</p>
+      <div class="meta-line">Suối Lồ Ồ, Làng Cầu Gãy • Sáng 30/4</div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION: ĐIỂM ĐẾN -->
+<div class="section">
+  <h2>Spot du lịch — Phân loại theo độ phù hợp với bé</h2>
+  <p class="scroll-hint">→ Vuốt ngang để xem đủ cột</p>
+  <div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Spot</th>
+        <th>Phù hợp với bé 6 tuổi?</th>
+        <th>Khung giờ tốt</th>
+        <th>Vị trí trong lịch</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Hòn Rùa</strong> (cano + tắm + san hô)</td>
+        <td><span class="badge badge-must">RẤT TỐT</span> Nếu có áo phao trẻ em</td>
+        <td>8h–11h</td>
+        <td>Highlight 29/4</td>
+      </tr>
+      <tr>
+        <td><strong>Bãi Thùng</strong> (tắm biển)</td>
+        <td><span class="badge badge-must">RẤT TỐT</span> Sóng nhỏ, cát mịn</td>
+        <td>16h–18h</td>
+        <td>Optional 29/4 chiều</td>
+      </tr>
+      <tr>
+        <td><strong>Bãi Chuối</strong> (tắm biển)</td>
+        <td><span class="badge badge-relax">TỐT</span> Tương tự Bãi Thùng</td>
+        <td>16h–18h</td>
+        <td>Backup option</td>
+      </tr>
+      <tr>
+        <td><strong>Đoài Cafe</strong></td>
+        <td><span class="badge badge-relax">TỐT</span> Sân vườn rộng</td>
+        <td>7h30–10h</td>
+        <td>Sáng 30/4</td>
+      </tr>
+      <tr>
+        <td><strong>Cung biển DT702</strong></td>
+        <td><span class="badge badge-relax">TỐT</span> Bé ngắm cảnh, ngủ xe</td>
+        <td>Cả ngày, đẹp 16–18h</td>
+        <td>Trưa 30/4 (bắt buộc)</td>
+      </tr>
+      <tr>
+        <td><strong>Công viên Đá</strong></td>
+        <td><span class="badge badge-warn">HẠN CHẾ</span> Trekking 3km, mỏm cao</td>
+        <td>7h–9h hoặc 15h–17h</td>
+        <td>Optional 30/4 sáng (chỉ chụp gần đường)</td>
+      </tr>
+      <tr>
+        <td><strong>Chợ cá làng chài</strong></td>
+        <td><span class="badge badge-opt">CÂN NHẮC</span> Phải dậy 5h sáng</td>
+        <td>5h–6h</td>
+        <td>Optional 30/4</td>
+      </tr>
+      <tr>
+        <td><strong>Chợ Mỹ Tân</strong> (ngoài Vĩnh Hy)</td>
+        <td><span class="badge badge-warn">BỎ QUA</span> Xa, không tiện đường</td>
+        <td>5h–6h</td>
+        <td>Skip</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+</div>
+
+<!-- SECTION: ĐỒ MANG THEO -->
+<div class="section">
+  <h2>Checklist đồ mang theo</h2>
+  <div class="grid">
+    <div>
+      <h3 style="font-size:15px;margin-bottom:12px;color:var(--accent-dark);">Cho bé 6 tuổi</h3>
+      <ul class="checklist">
+        <li>Áo phao trẻ em (xác nhận resort/cano có chưa)</li>
+        <li>Mặt nạ snorkel cỡ trẻ em + ống thở</li>
+        <li>Kem chống nắng SPF 50+ cho trẻ em</li>
+        <li>Mũ rộng vành + kính râm</li>
+        <li>2-3 bộ đồ bơi đổi luân phiên</li>
+        <li>Áo dài tay UV mỏng (mặc khi bơi)</li>
+        <li>Sandal/giày đế cao su chống trượt</li>
+        <li>Khăn tắm riêng + dầu gội/sữa tắm trẻ em</li>
+        <li>Thuốc nhỏ mắt + nước muối sinh lý (sau bơi)</li>
+        <li>Thuốc say sóng nhi khoa (hỏi BS trước)</li>
+        <li>Snack quen + sữa hộp + nước lọc</li>
+        <li>iPad + tai nghe (khi đợi sân bay/checkin)</li>
+      </ul>
+    </div>
+    <div>
+      <h3 style="font-size:15px;margin-bottom:12px;color:var(--accent-dark);">Cho người lớn</h3>
+      <ul class="checklist">
+        <li>Kem chống nắng SPF 50+ + son chống nắng</li>
+        <li>Mũ + kính râm + khăn rằn</li>
+        <li>Đồ bơi + áo khoác mỏng</li>
+        <li>Sạc dự phòng + sạc nhanh + dây sạc</li>
+        <li>Túi chống nước cho điện thoại (đi cano)</li>
+        <li>Áo gió mỏng (gió biển buổi tối)</li>
+        <li>Tiền mặt 2-3tr (quán nhỏ không quẹt thẻ)</li>
+        <li>Thuốc cá nhân + thuốc tiêu chảy + men tiêu hoá</li>
+        <li>Máy ảnh + ống kính (chụp DT702 + Đoài)</li>
+        <li>Áo trắng/màu nhạt cho ảnh editorial</li>
+      </ul>
+    </div>
+    <div>
+      <h3 style="font-size:15px;margin-bottom:12px;color:var(--accent-dark);">Đặt trước & xác nhận</h3>
+      <ul class="checklist">
+        <li>Cano Hòn Rùa với nhà Tùng (xác nhận tối nay)</li>
+        <li>Bàn quán Bà Hương — trưa 28/4</li>
+        <li>Bàn Madame Hoàng — tối 29/4</li>
+        <li>Selectum Noa — gói AI hay phòng thường?</li>
+        <li>Kids club Selectum — đăng ký trước giờ check-in</li>
+        <li>Taxi/shuttle resort → sân bay 1/5 lúc 13:30</li>
+        <li>Save số điện thoại quán Đoài Cafe (xác nhận giờ mở 30/4)</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION: CẢNH BÁO -->
+<div class="section">
+  <h2>Cảnh báo & rủi ro cần né</h2>
+  <div class="grid">
+    <div class="card" style="border-left:3px solid var(--warn);">
+      <h3 style="color:var(--warn);">Nắng nóng 38–40°C</h3>
+      <p>Tháng 4–5 là đỉnh nóng Ninh Thuận. UV cao buổi 10h–15h. Né mọi hoạt động ngoài trời khoảng này.</p>
+      <p><strong>Cho bé:</strong> Bôi SPF 50+ trước 30 phút khi ra ngoài. Bôi lại sau mỗi 2h hoặc sau bơi. Uống nước liên tục.</p>
+    </div>
+    <div class="card" style="border-left:3px solid var(--warn);">
+      <h3 style="color:var(--warn);">Cao điểm 30/4 — Đông + giá tăng</h3>
+      <p>Quán full bàn, cano đặt trước 3 ngày, taxi/dịch vụ tăng giá. Đặt mọi thứ TRƯỚC, không walk-in.</p>
+      <p><strong>Tip:</strong> Đặt bàn quán ăn 1–2h trước giờ tới. Cano nhà Tùng đã có thì OK.</p>
+    </div>
+    <div class="card" style="border-left:3px solid var(--warn);">
+      <h3 style="color:var(--warn);">An toàn cano + biển với bé</h3>
+      <p>Bé 6 tuổi snorkel được nhưng phải có người lớn kèm sát. Áo phao 100% thời gian trên cano. Sóng to thì bỏ snorkel ra san hô — tắm gần bờ.</p>
+      <p><strong>Đỏ-cờ:</strong> Sóng cao &gt;1m, gió mạnh — yêu cầu cano quay về.</p>
+    </div>
+    <div class="card" style="border-left:3px solid var(--warn);">
+      <h3 style="color:var(--warn);">Đoài Cafe nghỉ thứ Tư</h3>
+      <p>29/4 = Thứ Tư. Đoài đóng cửa. Đã dời sang sáng 30/4 (Thứ 5). Vẫn xác nhận lại vì lễ có thể đổi lịch bất thường.</p>
+    </div>
+    <div class="card" style="border-left:3px solid var(--warn);">
+      <h3 style="color:var(--warn);">Công viên Đá nguy hiểm với bé</h3>
+      <p>Trekking xuyên rừng 3km mới đến khu chính. Có mỏm đá nhô cao, chưa khai thác. Bé 6 tuổi KHÔNG đi sâu — chỉ chụp khu gần đường rồi về.</p>
+    </div>
+    <div class="card" style="border-left:3px solid var(--warn);">
+      <h3 style="color:var(--warn);">Hải sản — say nắng/đau bụng</h3>
+      <p>Bé chưa quen hải sản nhiều có thể đau bụng. Ưu tiên cá hấp/luộc, tránh nướng cay/sống. Mang men tiêu hoá + thuốc tiêu chảy nhi khoa.</p>
+    </div>
+  </div>
+</div>
+
+<!-- NEXT STEPS -->
+<div class="section">
+  <h2>Việc cần làm tối nay (27/4) — Trước khi bay sáng mai</h2>
+  <ul class="checklist">
+    <li><strong>Xác nhận cano Hòn Rùa với nhà Tùng:</strong> Áo phao trẻ em, số ghế, giờ về.</li>
+    <li><strong>Đặt bàn quán Bà Hương trưa 28/4 (12h)</strong> — tránh full giờ trưa.</li>
+    <li><strong>Đặt bàn Madame Hoàng tối 29/4 (18h30)</strong> — chọn bàn ngoài view vịnh.</li>
+    <li><strong>Save số Đoài Cafe + Selectum Noa</strong> vào contacts máy.</li>
+    <li><strong>Kiểm tra túi đồ bé:</strong> Áo phao + mặt nạ snorkel + SPF 50+ + thuốc say sóng.</li>
+    <li><strong>Charge full pin:</strong> điện thoại, máy ảnh, sạc dự phòng, iPad của bé.</li>
+    <li><strong>In/screenshot:</strong> mã vé máy bay (đi và về), booking khách sạn Vĩnh Hy + Selectum, lịch trình này.</li>
+  </ul>
+</div>
+
+<footer>
+  Lịch trình build từ research 27/4/2026 — kiểm tra giờ mở quán/cano lại trước khi đi vì lễ 30/4 có thể đổi lịch.<br>
+  Updated to balance: trải nghiệm cho bé + nghỉ dưỡng. Né khung 11h–15h. Tone editorial gia đình.
+</footer>
+
+</div>
+
+<button class="to-top" aria-label="Lên đầu trang">↑</button>
+
+<script>
+  // ===== TAB SWITCHING =====
+  function switchToDay(dayId, scroll = true) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.day').forEach(d => d.classList.remove('active'));
+    const targetTab = document.querySelector('.tab[data-day="' + dayId + '"]');
+    const targetDay = document.getElementById(dayId);
+    if (targetTab) targetTab.classList.add('active');
+    if (targetDay) targetDay.classList.add('active');
+    if (scroll) {
+      const wrap = document.querySelector('.tabs-wrap');
+      const offset = wrap ? wrap.offsetTop : 0;
+      window.scrollTo({ top: offset - 8, behavior: 'smooth' });
+    }
+    // scroll active tab into view horizontally
+    if (targetTab) {
+      targetTab.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    }
+  }
+
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', () => switchToDay(tab.dataset.day));
+  });
+
+  // ===== PREV/NEXT DAY BUTTONS =====
+  document.querySelectorAll('.day-nav button[data-go]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      switchToDay(btn.dataset.go);
+    });
+  });
+
+  // ===== CHECKLIST TICK + LOCALSTORAGE =====
+  document.querySelectorAll('.checklist li').forEach((li) => {
+    const key = 'vinhhy_check_' + li.textContent.slice(0, 50).trim();
+    if (localStorage.getItem(key) === '1') li.classList.add('done');
+    li.addEventListener('click', () => {
+      li.classList.toggle('done');
+      localStorage.setItem(key, li.classList.contains('done') ? '1' : '0');
+    });
+  });
+
+  // ===== BACK TO TOP =====
+  const toTop = document.querySelector('.to-top');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 400) toTop.classList.add('show');
+    else toTop.classList.remove('show');
+  }, { passive: true });
+  toTop.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  // ===== SWIPE GESTURE between days (mobile) =====
+  let touchStartX = 0;
+  let touchStartY = 0;
+  const dayContainer = document.querySelector('.container');
+  const dayOrder = ['d1', 'd2', 'd3', 'd4'];
+
+  document.addEventListener('touchstart', (e) => {
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+  }, { passive: true });
+
+  document.addEventListener('touchend', (e) => {
+    if (!touchStartX) return;
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    const dy = e.changedTouches[0].clientY - touchStartY;
+    // only trigger if mostly horizontal & strong enough swipe
+    if (Math.abs(dx) > 80 && Math.abs(dx) > Math.abs(dy) * 2) {
+      const activeDay = document.querySelector('.day.active');
+      if (!activeDay) return;
+      const idx = dayOrder.indexOf(activeDay.id);
+      if (dx < 0 && idx < dayOrder.length - 1) switchToDay(dayOrder[idx + 1]);
+      else if (dx > 0 && idx > 0) switchToDay(dayOrder[idx - 1]);
+    }
+    touchStartX = 0;
+  }, { passive: true });
+</script>
+
+</body>
+</html>
